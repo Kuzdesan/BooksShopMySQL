@@ -91,16 +91,3 @@ INNER JOIN book AS b USING(book_id)
 WHERE name_step="Оплата" AND date_step_end IS NOT NULL 
 GROUP BY YEAR(date_step_end), MONTHNAME(date_step_end)
 ORDER BY Месяц;	
-
---TASK11 
-SELECT title, SUM(Количество) AS "Количество", SUM(Сумма) AS "Сумма" 
-FROM(
-	SELECT title, SUM(ba.amount) AS "Количество", SUM(ba.amount*ba.price) AS "Сумма" 
-	FROM buy_archive AS ba INNER JOIN book USING(book_id) GROUP BY title
-		UNION 
-	SELECT title, SUM(bb.amount) AS "Количество", SUM(bb.amount*price) AS "Сумма" 
-	FROM buy_book AS bb INNER JOIN book USING(book_id) 
-	INNER JOIN buy_step AS bs USING(buy_id) 
-	WHERE step_id=1 AND date_step_end IS NOT NULL GROUP BY title
-	) 
-AS query GROUP BY title ORDER BY Сумма DESC;
